@@ -7285,13 +7285,13 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
       {/* Bottom toolbar */}
       <div
         className={cn(
-          'flex-shrink-0 border-t border-border/40 bg-gradient-to-t from-card via-card/98 to-card/90 backdrop-blur-xl transition-all duration-300 overflow-hidden shadow-[0_-4px_20px_-6px_rgba(0,0,0,0.12)]',
+          'flex-shrink-0 border-t border-border/60 bg-gradient-to-t from-card via-card to-card/90 backdrop-blur-md transition-all duration-300 overflow-hidden shadow-[0_-2px_12px_-4px_rgba(0,0,0,0.1)]',
           (focusMode || presentationMode) && 'translate-y-full opacity-0 pointer-events-none absolute bottom-0 left-0 right-0'
         )}
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)', maxWidth: '100vw' }}
       >
         <div
-          className="flex items-center gap-1 px-2 py-2 scrollbar-hide"
+          className="flex items-center gap-1.5 px-3 py-2.5 scrollbar-hide"
           style={{
             overflowX: 'auto',
             overflowY: 'hidden',
@@ -7308,33 +7308,33 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Select tool */}
         <button
           className={cn(
-            'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+            'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
             tool === 'select'
-              ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-              : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+              ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
+              : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
           )}
           onClick={() => { setTool('select'); setEyedropperActive(false); }}
         >
-          <MousePointer2 className="h-[22px] w-[22px]" strokeWidth={tool === 'select' ? 2.5 : 2} />
+          <MousePointer2 className="h-5 w-5" strokeWidth={tool === 'select' ? 2.5 : 1.8} />
         </button>
 
         {/* Separator */}
-        <div className="w-px h-7 bg-border/30 flex-shrink-0 mx-0.5 rounded-full" />
+        <div className="w-px h-6 bg-border/50 flex-shrink-0 mx-0.5" />
 
         {/* Text Highlight tool — always available */}
         <Popover open={openToolbarPopover === 'textHighlight'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'textHighlight' : null)}>
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 relative',
+                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 relative',
                 tool === 'textHighlight'
-                  ? 'bg-gradient-to-br from-yellow-400/20 to-orange-400/20 text-yellow-600 dark:text-yellow-400 ring-2 ring-yellow-400/30 shadow-md'
-                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                  ? 'bg-gradient-to-br from-yellow-400/20 to-orange-400/20 text-yellow-600 dark:text-yellow-400 ring-2 ring-yellow-400/30 scale-105'
+                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
               )}
               onClick={() => { setTool('textHighlight'); setEyedropperActive(false); }}
               title={t('sketch.highlight')}
             >
-              <Highlighter className="h-[22px] w-[22px]" strokeWidth={tool === 'textHighlight' ? 2.5 : 2} />
+              <Highlighter className="h-5 w-5" strokeWidth={tool === 'textHighlight' ? 2.5 : 1.8} />
               <span className="absolute bottom-0.5 right-0.5 w-2.5 h-2.5 rounded-full border border-card shadow-sm" style={{ backgroundColor: color }} />
             </button>
           </PopoverTrigger>
@@ -7372,10 +7372,10 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {pdfPages.length > 0 && (
           <button
             className={cn(
-              'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 relative',
+              'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 relative',
               tool === 'pdfTextSelect'
-                ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-                : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                ? 'bg-primary/15 text-primary scale-105'
+                : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
             )}
             onClick={() => {
               setTool('pdfTextSelect');
@@ -7385,27 +7385,27 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
             }}
             title={t('sketch.selectPdfText')}
           >
-            <FileText className="h-[22px] w-[22px]" strokeWidth={tool === 'pdfTextSelect' ? 2.5 : 2} />
+            <FileText className="h-5 w-5" strokeWidth={tool === 'pdfTextSelect' ? 2.5 : 1.8} />
             <span className="absolute -bottom-0.5 -right-0.5 text-[7px] font-bold text-primary">T</span>
           </button>
         )}
 
         {/* Separator */}
-        <div className="w-px h-7 bg-border/30 flex-shrink-0 mx-0.5 rounded-full" />
+        <div className="w-px h-6 bg-border/50 flex-shrink-0 mx-0.5" />
 
         {/* Sticky note tool */}
         <Popover open={openToolbarPopover === 'sticky'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'sticky' : null)}>
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
                 tool === 'sticky'
-                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
+                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
               )}
               onClick={() => { setTool('sticky'); setEyedropperActive(false); }}
             >
-              <StickyNote className="h-[22px] w-[22px]" strokeWidth={tool === 'sticky' ? 2.5 : 2} />
+              <StickyNote className="h-5 w-5" strokeWidth={tool === 'sticky' ? 2.5 : 1.8} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-3 bg-card" align="start" side="top">
@@ -7428,12 +7428,12 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Image tool */}
         <button
           className={cn(
-            'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
-            'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+            'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
+            'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
           )}
           onClick={() => imageInputRef.current?.click()}
         >
-          <ImagePlus className="h-[22px] w-[22px]" strokeWidth={2} />
+          <ImagePlus className="h-5 w-5" strokeWidth={1.8} />
         </button>
         <input
           ref={imageInputRef}
@@ -7452,14 +7452,14 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
                 tool === 'washi'
-                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/15 text-primary scale-105'
+                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
               )}
               onClick={() => { setTool('washi' as ToolType); setEyedropperActive(false); }}
             >
-              <Ribbon className="h-[22px] w-[22px]" strokeWidth={tool === 'washi' ? 2.5 : 2} />
+              <Ribbon className="h-5 w-5" strokeWidth={tool === 'washi' ? 2.5 : 1.8} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-56 p-3 bg-card" align="start" side="top">
@@ -7518,20 +7518,20 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         />
 
         {/* Separator */}
-        <div className="w-px h-7 bg-border/30 flex-shrink-0 mx-0.5 rounded-full" />
+        <div className="w-px h-6 bg-border/50 flex-shrink-0 mx-0.5" />
 
         {/* Drawing tools popover */}
         <Popover open={openToolbarPopover === 'draw'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'draw' : null)}>
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
                 activeDrawTool
-                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
+                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
               )}
             >
-              {activeDrawTool ? <activeDrawTool.icon className="h-[22px] w-[22px]" strokeWidth={2.5} /> : <Pen className="h-[22px] w-[22px]" strokeWidth={2} />}
+              {activeDrawTool ? <activeDrawTool.icon className="h-5 w-5" strokeWidth={2.5} /> : <Pen className="h-5 w-5" strokeWidth={1.8} />}
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2.5 bg-card/95 backdrop-blur-md border border-border/50 shadow-xl rounded-2xl" align="start" side="top">
@@ -7541,14 +7541,14 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
                   className={cn(
                     'flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-200',
                     tool === d.id
-                      ? 'bg-primary/12 text-primary'
-                      : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                      ? 'bg-primary/15 text-primary'
+                      : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
                   )}
                   onClick={() => { setTool(d.id); setEyedropperActive(false); setOpenToolbarPopover(null); }}
                 >
                   <div className="flex items-center gap-1.5 w-full">
-                    <d.icon className="h-4 w-4 flex-shrink-0" strokeWidth={tool === d.id ? 2.5 : 2} />
-                    <span className="text-[10px] font-semibold">{t(`sketch.drawTools.${d.id}`)}</span>
+                    <d.icon className="h-3.5 w-3.5 flex-shrink-0" strokeWidth={tool === d.id ? 2.5 : 1.8} />
+                    <span className="text-[10px] font-medium">{t(`sketch.drawTools.${d.id}`)}</span>
                   </div>
                   <PenPreviewCanvas penType={d.id} isActive={tool === d.id} currentColor={color} />
                 </button>
@@ -7560,14 +7560,14 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Eraser */}
         <button
           className={cn(
-            'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+            'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
             tool === 'eraser'
-              ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-              : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+              ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
+              : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
           )}
           onClick={() => { setTool('eraser'); setEyedropperActive(false); }}
         >
-          <Eraser className="h-[22px] w-[22px]" strokeWidth={tool === 'eraser' ? 2.5 : 2} />
+          <Eraser className="h-5 w-5" strokeWidth={tool === 'eraser' ? 2.5 : 1.8} />
         </button>
 
         {/* Shape tools popover */}
@@ -7575,15 +7575,15 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
                 activeShapeTool
-                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
+                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
               )}
             >
               {activeShapeTool
-                ? <activeShapeTool.icon className={cn('h-[22px] w-[22px]', activeShapeTool.id === 'line' && '-rotate-45')} strokeWidth={2.5} />
-                : <Square className="h-[22px] w-[22px]" strokeWidth={2} />}
+                ? <activeShapeTool.icon className={cn('h-5 w-5', activeShapeTool.id === 'line' && '-rotate-45')} strokeWidth={2.5} />
+                : <Square className="h-5 w-5" strokeWidth={1.8} />}
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2.5 bg-card/95 backdrop-blur-md border border-border/50 shadow-xl rounded-2xl" align="start" side="top">
@@ -7593,12 +7593,12 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
                   className={cn(
                     'h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-200',
                     tool === s.id
-                      ? 'bg-primary/12 text-primary scale-105'
-                      : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                      ? 'bg-primary/15 text-primary scale-105'
+                      : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
                   )}
                   onClick={() => { setTool(s.id); setEyedropperActive(false); setOpenToolbarPopover(null); }} title={t(`sketch.shapes.${s.id}`)}
                 >
-                  <s.icon className={cn('h-5 w-5', s.id === 'line' && '-rotate-45')} strokeWidth={tool === s.id ? 2.5 : 2} />
+                  <s.icon className={cn('h-5 w-5', s.id === 'line' && '-rotate-45')} strokeWidth={tool === s.id ? 2.5 : 1.8} />
                 </button>
               ))}
             </div>
@@ -7693,9 +7693,9 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Advanced color picker */}
         <Popover open={openToolbarPopover === 'color'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'color' : null)}>
           <PopoverTrigger asChild>
-            <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95 relative">
-              <Palette className="h-[22px] w-[22px]" strokeWidth={2} />
-              <span className="absolute bottom-1 right-1 w-3 h-3 rounded-full border-2 border-card shadow-sm" style={{ backgroundColor: color }} />
+            <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95 relative">
+              <Palette className="h-5 w-5" strokeWidth={1.8} />
+              <span className="absolute bottom-1.5 right-1.5 w-2.5 h-2.5 rounded-full border border-border shadow-sm" style={{ backgroundColor: color }} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-3 bg-card" align="start" side="top">
@@ -7808,8 +7808,8 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Stroke width */}
         <Popover open={openToolbarPopover === 'stroke'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'stroke' : null)}>
           <PopoverTrigger asChild>
-            <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95">
-              <Minus className="h-[22px] w-[22px]" strokeWidth={strokeWidth > 8 ? 4 : 2.5} />
+            <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95">
+              <Minus className="h-5 w-5" strokeWidth={strokeWidth > 8 ? 4 : 2} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-48 p-3 bg-card" align="center" side="top">
@@ -7821,7 +7821,7 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Background selector */}
         <Popover open={openToolbarPopover === 'bg'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'bg' : null)}>
           <PopoverTrigger asChild>
-            <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95"><Grid3X3 className="h-[22px] w-[22px]" strokeWidth={2} /></button>
+            <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95"><Grid3X3 className="h-5 w-5" strokeWidth={1.8} /></button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2 bg-card" align="center" side="top">
             <p className="text-[10px] font-medium text-foreground mb-1.5 px-1">{t('sketch.background')}</p>
@@ -7858,7 +7858,7 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Layers popover */}
         <Popover open={openToolbarPopover === 'layers'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'layers' : null)}>
           <PopoverTrigger asChild>
-            <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95"><Layers className="h-[22px] w-[22px]" strokeWidth={2} /></button>
+            <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95"><Layers className="h-5 w-5" strokeWidth={1.8} /></button>
           </PopoverTrigger>
           <PopoverContent className="w-56 p-3 bg-card" align="center" side="top">
             <div className="flex items-center justify-between mb-2">
@@ -7985,13 +7985,13 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
                 symmetryMode !== 'off'
-                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/15 text-primary scale-105'
+                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
               )}
             >
-              <FlipHorizontal className="h-[22px] w-[22px]" strokeWidth={symmetryMode !== 'off' ? 2.5 : 2} />
+              <FlipHorizontal className="h-5 w-5" strokeWidth={symmetryMode !== 'off' ? 2.5 : 1.8} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2 bg-card" align="center" side="top">
@@ -8031,13 +8031,13 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
                 (showRulers || showPhysicalRuler || showProtractor || showTriangle)
-                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/15 text-primary scale-105'
+                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
               )}
             >
-              <Ruler className="h-[22px] w-[22px]" strokeWidth={(showRulers || showPhysicalRuler || showProtractor || showTriangle) ? 2.5 : 2} />
+              <Ruler className="h-5 w-5" strokeWidth={(showRulers || showPhysicalRuler || showProtractor || showTriangle) ? 2.5 : 1.8} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2 bg-card" align="center" side="top">
@@ -8084,40 +8084,40 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Video Panel toggle */}
         <button
           className={cn(
-            'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+            'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
             showVideoPanel
-              ? 'bg-destructive/12 text-destructive ring-2 ring-destructive/25 shadow-md'
+              ? 'bg-destructive/15 text-destructive scale-105'
               : videoUrl
-                ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
-                : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
+                ? 'bg-primary/15 text-primary scale-105'
+                : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
           )}
           onClick={() => setShowVideoPanel(!showVideoPanel)}
           title={t('sketch.video')}
         >
-          <Video className="h-[22px] w-[22px]" strokeWidth={showVideoPanel || videoUrl ? 2.5 : 2} />
+          <Video className="h-5 w-5" strokeWidth={showVideoPanel || videoUrl ? 2.5 : 1.8} />
         </button>
 
 
         <div className="flex-1" />
 
         {/* Separator */}
-        <div className="w-px h-7 bg-border/30 flex-shrink-0 mx-0.5 rounded-full" />
+        <div className="w-px h-6 bg-border/50 flex-shrink-0 mx-0.5" />
 
-        <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95" onClick={handleUndo}>
-          <Undo2 className="h-[22px] w-[22px]" strokeWidth={2} />
+        <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95" onClick={handleUndo}>
+          <Undo2 className="h-5 w-5" strokeWidth={1.8} />
         </button>
-        <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95" onClick={handleRedo}>
-          <Redo2 className="h-[22px] w-[22px]" strokeWidth={2} />
+        <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95" onClick={handleRedo}>
+          <Redo2 className="h-5 w-5" strokeWidth={1.8} />
         </button>
-        <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-destructive/80 hover:bg-destructive/10 hover:text-destructive active:scale-95" onClick={handleClear}>
-          <Trash2 className="h-[22px] w-[22px]" strokeWidth={2} />
+        <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-destructive/70 hover:bg-destructive/10 hover:text-destructive active:scale-95" onClick={handleClear}>
+          <Trash2 className="h-5 w-5" strokeWidth={1.8} />
         </button>
 
         {/* Export popover */}
         <Popover open={openToolbarPopover === 'export'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'export' : null)}>
           <PopoverTrigger asChild>
-            <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 border border-border/40 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95 shadow-sm">
-              <Download className="h-[22px] w-[22px]" strokeWidth={2} />
+            <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 border border-border/50 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95">
+              <Download className="h-5 w-5" strokeWidth={1.8} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2 bg-card" align="end" side="top">
