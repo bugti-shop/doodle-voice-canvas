@@ -183,7 +183,7 @@ export const PremiumPaywall = () => {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <button 
+           <button 
               onClick={handlePurchase}
               disabled={isPurchasing}
               className="w-80 mt-4 btn-duo disabled:opacity-50"
@@ -194,6 +194,18 @@ export const PremiumPaywall = () => {
                   ? 'Try for $0.00 today'
                   : `Continue with ${currentPlan.price}`}
             </button>
+
+            {/* Trial terms disclosure - required by App Store / Play Store */}
+            {currentPlan.hasTrial && (
+              <p className="text-muted-foreground text-[11px] text-center max-w-xs mt-2 leading-relaxed">
+                Free for 3 days, then {currentPlan.price}. Cancel anytime before the trial ends and you won't be charged. Subscription automatically renews unless canceled at least 24 hours before the end of the current period. You can cancel anytime in your device's subscription settings.
+              </p>
+            )}
+            {!currentPlan.hasTrial && (
+              <p className="text-muted-foreground text-[11px] text-center max-w-xs mt-2 leading-relaxed">
+                Subscription automatically renews unless canceled at least 24 hours before the end of the current period. You can cancel anytime in your device's subscription settings.
+              </p>
+            )}
 
             <button 
               onClick={handleRestore}
