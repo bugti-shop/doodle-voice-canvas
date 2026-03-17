@@ -7808,8 +7808,8 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Stroke width */}
         <Popover open={openToolbarPopover === 'stroke'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'stroke' : null)}>
           <PopoverTrigger asChild>
-            <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95">
-              <Minus className="h-5 w-5" strokeWidth={strokeWidth > 8 ? 4 : 2} />
+            <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95">
+              <Minus className="h-[22px] w-[22px]" strokeWidth={strokeWidth > 8 ? 4 : 2.5} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-48 p-3 bg-card" align="center" side="top">
