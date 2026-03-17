@@ -234,7 +234,7 @@ export const PremiumPaywall = () => {
               {isPurchasing 
                 ? t('onboarding.paywall.processing') 
                 : currentPlan.hasTrial 
-                  ? 'Try for $0.00 today'
+                  ? t('onboarding.paywall.tryFreeToday', 'Start Free Trial')
                   : `Continue with ${currentPlan.price}`}
             </button>
 
