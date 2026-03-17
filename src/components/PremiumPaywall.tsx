@@ -23,13 +23,49 @@ const PERIOD_LABELS: Record<string, string> = {
 
 export const PremiumPaywall = () => {
   const { t } = useTranslation();
-  const { showPaywall, closePaywall, unlockPro, purchase } = useSubscription();
+  const { showPaywall, closePaywall, unlockPro, purchase, offerings } = useSubscription();
   const [selectedPlan, setSelectedPlan] = useState<ProductType>('monthly');
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [adminCode, setAdminCode] = useState('');
   const [showAdminInput, setShowAdminInput] = useState(false);
   const [adminError, setAdminError] = useState('');
+
+  // Build plans from RevenueCat offerings with localized prices
+  const PLANS = useMemo(() => {
+    const allPackages: PurchasesPackage[] = [];
+    if (offerings?.current?.availablePackages) {
+      allPackages.push(...offerings.current.availablePackages);
+    }
+    if (offerings?.all) {
+      Object.values(offerings.all).forEach((offering: any) => {
+        offering?.availablePackages?.forEach((p: PurchasesPackage) => {
+          if (!allPackages.find(e => e.identifier === p.identifier)) {
+            allPackages.push(p);
+          }
+        });
+      });
+    }
+
+    const findPrice = (type: ProductType): string | null => {
+      const typeMap: Record<ProductType, PACKAGE_TYPE> = {
+        weekly: PACKAGE_TYPE.WEEKLY,
+        monthly: PACKAGE_TYPE.MONTHLY,
+        yearly: PACKAGE_TYPE.ANNUAL,
+      };
+      const pkg = allPackages.find(p => p.packageType === typeMap[type]);
+      const product = pkg?.product;
+      if (product?.priceString) {
+        return `${product.priceString}${PERIOD_LABELS[type] || ''}`;
+      }
+      return null;
+    };
+
+    return FALLBACK_PLANS.map(plan => ({
+      ...plan,
+      price: findPrice(plan.id) || plan.price,
+    }));
+  }, [offerings]);
 
   useHardwareBackButton({
     onBack: () => { closePaywall(); },
