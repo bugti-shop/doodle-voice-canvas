@@ -1,28 +1,71 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Crown, Unlock, Bell, Loader2, Gift, Check } from 'lucide-react';
 import { useSubscription, ProductType } from '@/contexts/SubscriptionContext';
 import { Capacitor } from '@capacitor/core';
-import { Purchases } from '@revenuecat/purchases-capacitor';
+import { Purchases, PurchasesPackage, PACKAGE_TYPE } from '@revenuecat/purchases-capacitor';
 import { triggerHaptic } from '@/utils/haptics';
 import { useHardwareBackButton } from '@/hooks/useHardwareBackButton';
 import { setSetting } from '@/utils/settingsStorage';
 
-const PLANS = [
+// Fallback prices (USD) used only when RevenueCat offerings aren't available (e.g. web)
+const FALLBACK_PLANS = [
   { id: 'weekly' as ProductType, label: 'Weekly', price: '$1.99/wk', badge: null, hasTrial: false },
   { id: 'monthly' as ProductType, label: 'Monthly', price: '$5.99/mo', badge: 'Popular', hasTrial: true },
   { id: 'yearly' as ProductType, label: 'Yearly', price: '$39.99/yr', badge: 'Best Value', hasTrial: true },
 ] as const;
 
+const PERIOD_LABELS: Record<string, string> = {
+  weekly: '/wk',
+  monthly: '/mo',
+  yearly: '/yr',
+};
+
 export const PremiumPaywall = () => {
   const { t } = useTranslation();
-  const { showPaywall, closePaywall, unlockPro, purchase } = useSubscription();
+  const { showPaywall, closePaywall, unlockPro, purchase, offerings } = useSubscription();
   const [selectedPlan, setSelectedPlan] = useState<ProductType>('monthly');
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [adminCode, setAdminCode] = useState('');
   const [showAdminInput, setShowAdminInput] = useState(false);
   const [adminError, setAdminError] = useState('');
+
+  // Build plans from RevenueCat offerings with localized prices
+  const PLANS = useMemo(() => {
+    const allPackages: PurchasesPackage[] = [];
+    if (offerings?.current?.availablePackages) {
+      allPackages.push(...offerings.current.availablePackages);
+    }
+    if (offerings?.all) {
+      Object.values(offerings.all).forEach((offering: any) => {
+        offering?.availablePackages?.forEach((p: PurchasesPackage) => {
+          if (!allPackages.find(e => e.identifier === p.identifier)) {
+            allPackages.push(p);
+          }
+        });
+      });
+    }
+
+    const findPrice = (type: ProductType): string | null => {
+      const typeMap: Record<ProductType, PACKAGE_TYPE> = {
+        weekly: PACKAGE_TYPE.WEEKLY,
+        monthly: PACKAGE_TYPE.MONTHLY,
+        yearly: PACKAGE_TYPE.ANNUAL,
+      };
+      const pkg = allPackages.find(p => p.packageType === typeMap[type]);
+      const product = pkg?.product;
+      if (product?.priceString) {
+        return `${product.priceString}${PERIOD_LABELS[type] || ''}`;
+      }
+      return null;
+    };
+
+    return FALLBACK_PLANS.map(plan => ({
+      ...plan,
+      price: findPrice(plan.id) || plan.price,
+    }));
+  }, [offerings]);
 
   useHardwareBackButton({
     onBack: () => { closePaywall(); },
@@ -191,7 +234,7 @@ export const PremiumPaywall = () => {
               {isPurchasing 
                 ? t('onboarding.paywall.processing') 
                 : currentPlan.hasTrial 
-                  ? 'Try for $0.00 today'
+                  ? t('onboarding.paywall.tryFreeToday', 'Start Free Trial')
                   : `Continue with ${currentPlan.price}`}
             </button>
 
