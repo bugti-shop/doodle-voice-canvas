@@ -7575,15 +7575,15 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
+                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
                 activeShapeTool
-                  ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
-                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
+                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
               )}
             >
               {activeShapeTool
-                ? <activeShapeTool.icon className={cn('h-5 w-5', activeShapeTool.id === 'line' && '-rotate-45')} strokeWidth={2.5} />
-                : <Square className="h-5 w-5" strokeWidth={1.8} />}
+                ? <activeShapeTool.icon className={cn('h-[22px] w-[22px]', activeShapeTool.id === 'line' && '-rotate-45')} strokeWidth={2.5} />
+                : <Square className="h-[22px] w-[22px]" strokeWidth={2} />}
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2.5 bg-card/95 backdrop-blur-md border border-border/50 shadow-xl rounded-2xl" align="start" side="top">
@@ -7593,12 +7593,12 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
                   className={cn(
                     'h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-200',
                     tool === s.id
-                      ? 'bg-primary/15 text-primary scale-105'
-                      : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                      ? 'bg-primary/12 text-primary scale-105'
+                      : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
                   )}
                   onClick={() => { setTool(s.id); setEyedropperActive(false); setOpenToolbarPopover(null); }} title={t(`sketch.shapes.${s.id}`)}
                 >
-                  <s.icon className={cn('h-5 w-5', s.id === 'line' && '-rotate-45')} strokeWidth={tool === s.id ? 2.5 : 1.8} />
+                  <s.icon className={cn('h-5 w-5', s.id === 'line' && '-rotate-45')} strokeWidth={tool === s.id ? 2.5 : 2} />
                 </button>
               ))}
             </div>
