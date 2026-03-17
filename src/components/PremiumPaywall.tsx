@@ -1,18 +1,25 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, Crown, Unlock, Bell, Loader2, Gift, Check } from 'lucide-react';
 import { useSubscription, ProductType } from '@/contexts/SubscriptionContext';
 import { Capacitor } from '@capacitor/core';
-import { Purchases } from '@revenuecat/purchases-capacitor';
+import { Purchases, PurchasesPackage, PACKAGE_TYPE } from '@revenuecat/purchases-capacitor';
 import { triggerHaptic } from '@/utils/haptics';
 import { useHardwareBackButton } from '@/hooks/useHardwareBackButton';
 import { setSetting } from '@/utils/settingsStorage';
 
-const PLANS = [
+// Fallback prices (USD) used only when RevenueCat offerings aren't available (e.g. web)
+const FALLBACK_PLANS = [
   { id: 'weekly' as ProductType, label: 'Weekly', price: '$1.99/wk', badge: null, hasTrial: false },
   { id: 'monthly' as ProductType, label: 'Monthly', price: '$5.99/mo', badge: 'Popular', hasTrial: true },
   { id: 'yearly' as ProductType, label: 'Yearly', price: '$39.99/yr', badge: 'Best Value', hasTrial: true },
 ] as const;
+
+const PERIOD_LABELS: Record<string, string> = {
+  weekly: '/wk',
+  monthly: '/mo',
+  yearly: '/yr',
+};
 
 export const PremiumPaywall = () => {
   const { t } = useTranslation();
