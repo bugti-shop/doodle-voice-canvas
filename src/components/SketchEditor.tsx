@@ -7518,20 +7518,20 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         />
 
         {/* Separator */}
-        <div className="w-px h-6 bg-border/50 flex-shrink-0 mx-0.5" />
+        <div className="w-px h-7 bg-border/30 flex-shrink-0 mx-0.5 rounded-full" />
 
         {/* Drawing tools popover */}
         <Popover open={openToolbarPopover === 'draw'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'draw' : null)}>
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
+                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
                 activeDrawTool
-                  ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
-                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
+                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
               )}
             >
-              {activeDrawTool ? <activeDrawTool.icon className="h-5 w-5" strokeWidth={2.5} /> : <Pen className="h-5 w-5" strokeWidth={1.8} />}
+              {activeDrawTool ? <activeDrawTool.icon className="h-[22px] w-[22px]" strokeWidth={2.5} /> : <Pen className="h-[22px] w-[22px]" strokeWidth={2} />}
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2.5 bg-card/95 backdrop-blur-md border border-border/50 shadow-xl rounded-2xl" align="start" side="top">
@@ -7541,14 +7541,14 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
                   className={cn(
                     'flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-200',
                     tool === d.id
-                      ? 'bg-primary/15 text-primary'
-                      : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                      ? 'bg-primary/12 text-primary'
+                      : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
                   )}
                   onClick={() => { setTool(d.id); setEyedropperActive(false); setOpenToolbarPopover(null); }}
                 >
                   <div className="flex items-center gap-1.5 w-full">
-                    <d.icon className="h-3.5 w-3.5 flex-shrink-0" strokeWidth={tool === d.id ? 2.5 : 1.8} />
-                    <span className="text-[10px] font-medium">{t(`sketch.drawTools.${d.id}`)}</span>
+                    <d.icon className="h-4 w-4 flex-shrink-0" strokeWidth={tool === d.id ? 2.5 : 2} />
+                    <span className="text-[10px] font-semibold">{t(`sketch.drawTools.${d.id}`)}</span>
                   </div>
                   <PenPreviewCanvas penType={d.id} isActive={tool === d.id} currentColor={color} />
                 </button>
@@ -7560,14 +7560,14 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Eraser */}
         <button
           className={cn(
-            'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
+            'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
             tool === 'eraser'
-              ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
-              : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+              ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
+              : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
           )}
           onClick={() => { setTool('eraser'); setEyedropperActive(false); }}
         >
-          <Eraser className="h-5 w-5" strokeWidth={tool === 'eraser' ? 2.5 : 1.8} />
+          <Eraser className="h-[22px] w-[22px]" strokeWidth={tool === 'eraser' ? 2.5 : 2} />
         </button>
 
         {/* Shape tools popover */}
