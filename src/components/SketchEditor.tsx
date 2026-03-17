@@ -7285,13 +7285,13 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
       {/* Bottom toolbar */}
       <div
         className={cn(
-          'flex-shrink-0 border-t border-border/60 bg-gradient-to-t from-card via-card to-card/90 backdrop-blur-md transition-all duration-300 overflow-hidden shadow-[0_-2px_12px_-4px_rgba(0,0,0,0.1)]',
+          'flex-shrink-0 border-t border-border/40 bg-gradient-to-t from-card via-card/98 to-card/90 backdrop-blur-xl transition-all duration-300 overflow-hidden shadow-[0_-4px_20px_-6px_rgba(0,0,0,0.12)]',
           (focusMode || presentationMode) && 'translate-y-full opacity-0 pointer-events-none absolute bottom-0 left-0 right-0'
         )}
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)', maxWidth: '100vw' }}
       >
         <div
-          className="flex items-center gap-1.5 px-3 py-2.5 scrollbar-hide"
+          className="flex items-center gap-1 px-2 py-2 scrollbar-hide"
           style={{
             overflowX: 'auto',
             overflowY: 'hidden',
