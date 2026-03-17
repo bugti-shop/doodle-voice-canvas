@@ -7821,7 +7821,7 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Background selector */}
         <Popover open={openToolbarPopover === 'bg'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'bg' : null)}>
           <PopoverTrigger asChild>
-            <button className="h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95"><Grid3X3 className="h-5 w-5" strokeWidth={1.8} /></button>
+            <button className="h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95"><Grid3X3 className="h-[22px] w-[22px]" strokeWidth={2} /></button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2 bg-card" align="center" side="top">
             <p className="text-[10px] font-medium text-foreground mb-1.5 px-1">{t('sketch.background')}</p>
