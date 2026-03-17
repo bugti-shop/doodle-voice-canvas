@@ -7326,15 +7326,15 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 relative',
+                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 relative',
                 tool === 'textHighlight'
-                  ? 'bg-gradient-to-br from-yellow-400/20 to-orange-400/20 text-yellow-600 dark:text-yellow-400 ring-2 ring-yellow-400/30 scale-105'
-                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                  ? 'bg-gradient-to-br from-yellow-400/20 to-orange-400/20 text-yellow-600 dark:text-yellow-400 ring-2 ring-yellow-400/30 shadow-md'
+                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
               )}
               onClick={() => { setTool('textHighlight'); setEyedropperActive(false); }}
               title={t('sketch.highlight')}
             >
-              <Highlighter className="h-5 w-5" strokeWidth={tool === 'textHighlight' ? 2.5 : 1.8} />
+              <Highlighter className="h-[22px] w-[22px]" strokeWidth={tool === 'textHighlight' ? 2.5 : 2} />
               <span className="absolute bottom-0.5 right-0.5 w-2.5 h-2.5 rounded-full border border-card shadow-sm" style={{ backgroundColor: color }} />
             </button>
           </PopoverTrigger>
@@ -7372,10 +7372,10 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {pdfPages.length > 0 && (
           <button
             className={cn(
-              'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200 relative',
+              'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200 relative',
               tool === 'pdfTextSelect'
-                ? 'bg-primary/15 text-primary scale-105'
-                : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
+                : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
             )}
             onClick={() => {
               setTool('pdfTextSelect');
@@ -7385,27 +7385,27 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
             }}
             title={t('sketch.selectPdfText')}
           >
-            <FileText className="h-5 w-5" strokeWidth={tool === 'pdfTextSelect' ? 2.5 : 1.8} />
+            <FileText className="h-[22px] w-[22px]" strokeWidth={tool === 'pdfTextSelect' ? 2.5 : 2} />
             <span className="absolute -bottom-0.5 -right-0.5 text-[7px] font-bold text-primary">T</span>
           </button>
         )}
 
         {/* Separator */}
-        <div className="w-px h-6 bg-border/50 flex-shrink-0 mx-0.5" />
+        <div className="w-px h-7 bg-border/30 flex-shrink-0 mx-0.5 rounded-full" />
 
         {/* Sticky note tool */}
         <Popover open={openToolbarPopover === 'sticky'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'sticky' : null)}>
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
+                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
                 tool === 'sticky'
-                  ? 'bg-primary/15 text-primary scale-105 ring-2 ring-primary/20 shadow-sm'
-                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
+                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
               )}
               onClick={() => { setTool('sticky'); setEyedropperActive(false); }}
             >
-              <StickyNote className="h-5 w-5" strokeWidth={tool === 'sticky' ? 2.5 : 1.8} />
+              <StickyNote className="h-[22px] w-[22px]" strokeWidth={tool === 'sticky' ? 2.5 : 2} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-3 bg-card" align="start" side="top">
@@ -7428,12 +7428,12 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         {/* Image tool */}
         <button
           className={cn(
-            'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
-            'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+            'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
+            'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
           )}
           onClick={() => imageInputRef.current?.click()}
         >
-          <ImagePlus className="h-5 w-5" strokeWidth={1.8} />
+          <ImagePlus className="h-[22px] w-[22px]" strokeWidth={2} />
         </button>
         <input
           ref={imageInputRef}
@@ -7452,14 +7452,14 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
+                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
                 tool === 'washi'
-                  ? 'bg-primary/15 text-primary scale-105'
-                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
+                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
               )}
               onClick={() => { setTool('washi' as ToolType); setEyedropperActive(false); }}
             >
-              <Ribbon className="h-5 w-5" strokeWidth={tool === 'washi' ? 2.5 : 1.8} />
+              <Ribbon className="h-[22px] w-[22px]" strokeWidth={tool === 'washi' ? 2.5 : 2} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-56 p-3 bg-card" align="start" side="top">
