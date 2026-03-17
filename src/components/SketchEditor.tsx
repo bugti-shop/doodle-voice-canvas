@@ -7319,7 +7319,7 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
         </button>
 
         {/* Separator */}
-        <div className="w-px h-6 bg-border/50 flex-shrink-0 mx-0.5" />
+        <div className="w-px h-7 bg-border/30 flex-shrink-0 mx-0.5 rounded-full" />
 
         {/* Text Highlight tool — always available */}
         <Popover open={openToolbarPopover === 'textHighlight'} onOpenChange={(o) => setOpenToolbarPopover(o ? 'textHighlight' : null)}>
