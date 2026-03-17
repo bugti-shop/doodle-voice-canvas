@@ -8031,13 +8031,13 @@ export const SketchEditor = memo(({ initialData, onChange, onImageExport, classN
           <PopoverTrigger asChild>
             <button
               className={cn(
-                'h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center transition-all duration-200',
+                'h-11 w-11 flex-shrink-0 rounded-2xl flex items-center justify-center transition-all duration-200',
                 (showRulers || showPhysicalRuler || showProtractor || showTriangle)
-                  ? 'bg-primary/15 text-primary scale-105'
-                  : 'text-foreground/70 hover:bg-muted/80 hover:text-foreground active:scale-95'
+                  ? 'bg-primary/12 text-primary ring-2 ring-primary/25 shadow-md shadow-primary/10'
+                  : 'text-foreground/80 hover:bg-muted/60 hover:text-foreground active:scale-95'
               )}
             >
-              <Ruler className="h-5 w-5" strokeWidth={(showRulers || showPhysicalRuler || showProtractor || showTriangle) ? 2.5 : 1.8} />
+              <Ruler className="h-[22px] w-[22px]" strokeWidth={(showRulers || showPhysicalRuler || showProtractor || showTriangle) ? 2.5 : 2} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-2 bg-card" align="center" side="top">
