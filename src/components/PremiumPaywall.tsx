@@ -228,7 +228,7 @@ export const PremiumPaywall = () => {
           <div className="flex flex-col items-center gap-2">
             {/* Dynamic offer text above button */}
             {currentPlan.hasTrial && (
-              <p className="text-foreground font-semibold text-base text-center mt-4">
+              <p className="text-muted-foreground font-normal text-xs text-center mt-4">
                 3 Days Free, then {currentPlan.price}
               </p>
             )}
@@ -247,6 +247,42 @@ export const PremiumPaywall = () => {
 
             {adminError && (
               <p className="text-destructive text-xs mt-1">{adminError}</p>
+            )}
+
+            {/* Restore & Access Code */}
+            <div className="flex items-center gap-3 mt-3">
+              <button
+                onClick={handleRestore}
+                disabled={isRestoring}
+                className="text-muted-foreground text-xs underline disabled:opacity-50"
+              >
+                {isRestoring ? 'Restoring...' : 'Restore Purchase'}
+              </button>
+              <span className="text-muted-foreground text-xs">•</span>
+              <button
+                onClick={() => setShowAdminInput(!showAdminInput)}
+                className="text-muted-foreground text-xs underline"
+              >
+                Access Code
+              </button>
+            </div>
+
+            {showAdminInput && (
+              <div className="flex items-center gap-2 mt-2">
+                <input
+                  type="text"
+                  value={adminCode}
+                  onChange={(e) => setAdminCode(e.target.value)}
+                  placeholder="Enter code"
+                  className="h-8 w-40 rounded-md border border-input bg-background px-2 text-sm"
+                />
+                <button
+                  onClick={handleAccessCode}
+                  className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium"
+                >
+                  Apply
+                </button>
+              </div>
             )}
           </div>
         </div>
