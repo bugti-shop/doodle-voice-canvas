@@ -226,75 +226,28 @@ export const PremiumPaywall = () => {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-           <button 
-              onClick={handlePurchase}
-              disabled={isPurchasing}
-              className="w-80 mt-4 btn-duo disabled:opacity-50"
-            >
-              {isPurchasing 
-                ? t('onboarding.paywall.processing') 
-                : currentPlan.hasTrial 
-                  ? t('onboarding.paywall.tryFreeToday', 'Start Free Trial')
-                  : `Continue with ${currentPlan.price}`}
-            </button>
-
-            {/* Trial terms disclosure - required by App Store / Play Store */}
+            {/* Dynamic offer text above button */}
             {currentPlan.hasTrial && (
-              <p className="text-muted-foreground text-[11px] text-center max-w-xs mt-2 leading-relaxed">
-                Free for 3 days, then {currentPlan.price}. Cancel anytime before the trial ends and you won't be charged. Subscription automatically renews unless canceled at least 24 hours before the end of the current period. You can cancel anytime in your device's subscription settings.
-              </p>
-            )}
-            {!currentPlan.hasTrial && (
-              <p className="text-muted-foreground text-[11px] text-center max-w-xs mt-2 leading-relaxed">
-                Subscription automatically renews unless canceled at least 24 hours before the end of the current period. You can cancel anytime in your device's subscription settings.
+              <p className="text-foreground font-semibold text-base text-center mt-4">
+                3 Days Free, then {currentPlan.price}
               </p>
             )}
 
             <button 
-              onClick={handleRestore}
-              disabled={isRestoring}
-              className="text-primary font-medium text-sm mt-2 disabled:opacity-50"
+              onClick={handlePurchase}
+              disabled={isPurchasing}
+              className="w-80 mt-2 btn-duo disabled:opacity-50"
             >
-              {isRestoring ? t('onboarding.paywall.restoring') : t('onboarding.paywall.restorePurchase')}
+              {isPurchasing 
+                ? t('onboarding.paywall.processing') 
+                : currentPlan.hasTrial 
+                  ? 'Try for $0.00 Today'
+                  : `Continue with ${currentPlan.price}`}
             </button>
 
             {adminError && (
               <p className="text-destructive text-xs mt-1">{adminError}</p>
             )}
-
-            {/* Access Code */}
-            <div className="mt-6 w-full">
-              {!showAdminInput ? (
-                <button 
-                  onClick={() => setShowAdminInput(true)}
-                  className="text-muted-foreground text-xs underline"
-                >
-                  {t('onboarding.paywall.accessCode')}
-                </button>
-              ) : (
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex gap-2 w-full max-w-xs">
-                    <input
-                      type="password"
-                      value={adminCode}
-                      onChange={(e) => {
-                        setAdminCode(e.target.value.slice(0, 20));
-                        setAdminError('');
-                      }}
-                      placeholder={t('onboarding.paywall.enterAccessCode')}
-                      className="flex-1 px-4 py-2 border border-muted rounded-lg text-center text-sm focus:outline-none focus:border-primary"
-                      maxLength={20}
-                    />
-                    <button
-                      onClick={handleAccessCode}
-                      className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium"
-                    >
-                      {t('onboarding.paywall.apply')}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>
