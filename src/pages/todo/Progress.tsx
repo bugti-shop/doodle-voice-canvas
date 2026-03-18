@@ -14,7 +14,7 @@ import { SafeComponent } from '@/components/ErrorBoundary';
 
 import { GamificationCertificates, hasNewCertificates } from '@/components/GamificationCertificates';
 import { StreakDetailSheet } from '@/components/StreakDetailSheet';
-import { VirtualJourneyCard } from '@/components/VirtualJourneyCard';
+
 
 import { StreakSocietyBadge } from '@/components/StreakSocietyBadge';
 
