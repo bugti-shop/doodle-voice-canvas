@@ -385,10 +385,6 @@ const Progress = () => {
           </motion.button>
         </div>
 
-        {/* Virtual Journey */}
-        <SafeComponent fallback={null}>
-          <VirtualJourneyCard />
-        </SafeComponent>
 
         {/* At Risk Warning */}
         <AnimatePresence>
