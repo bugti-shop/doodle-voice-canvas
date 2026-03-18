@@ -220,8 +220,10 @@ const Progress = () => {
             </motion.div>
           </div>
         </motion.button>
+        </SafeComponent>
 
         {/* Week Progress & Freeze Info Card */}
+        <SafeComponent fallback={null}>
         <div className="bg-card rounded-2xl p-6 border shadow-sm">
           {/* Week Progress */}
           <div className="flex justify-between items-center gap-1 overflow-hidden">
