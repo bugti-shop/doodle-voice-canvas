@@ -141,6 +141,7 @@ const Progress = () => {
       <div className="container mx-auto px-4 py-6 space-y-6">
         
         {/* Tappable Streak Counter Widget */}
+        <SafeComponent fallback={null}>
         <motion.button
           onClick={() => setShowStreakDetail(true)}
           whileTap={{ scale: 0.97 }}
