@@ -461,7 +461,8 @@ export function useFirebaseSync() {
 
     const unsubJourney = onVirtualJourneyChanged(userId, (cloudJourney) => {
       if (uploadInProgress.current.has('virtualJourney') || !cloudJourney) return;
-      saveJourneyData(cloudJourney as VirtualJourneyData);
+      const sanitized = sanitizeJourneyData(cloudJourney);
+      saveJourneyData(sanitized);
       window.dispatchEvent(new Event('journeyRestored'));
     });
 
