@@ -228,7 +228,7 @@ export const PremiumPaywall = () => {
           <div className="flex flex-col items-center gap-2">
             {/* Dynamic offer text above button */}
             {currentPlan.hasTrial && (
-              <p className="text-muted-foreground/70 font-light text-xs text-center mt-4">
+              <p className="text-muted-foreground font-normal text-sm text-center mt-4">
                 3 Days Free, then {currentPlan.price}
               </p>
             )}
