@@ -56,10 +56,13 @@ export const UrgentReminderOverlay = () => {
     try {
       const items = await loadTodoItems();
       const updated = items.map(item =>
-        item.id === reminder.id ? { ...item, completed: true } : item
+        item.id === reminder.id ? { ...item, completed: true, completedAt: new Date().toISOString() } : item
       );
       await saveTodoItems(updated);
-      window.dispatchEvent(new CustomEvent('urgentTaskComplete', { detail: { taskId: reminder.id } }));
+      // Dispatch tasksRestored so Today page reloads its state from storage
+      window.dispatchEvent(new CustomEvent('tasksRestored', { detail: updated }));
+      // Also notify Firebase sync and other listeners
+      window.dispatchEvent(new CustomEvent('tasksUpdated'));
     } catch (e) {
       console.error('[UrgentReminder] Failed to complete task:', e);
     }
