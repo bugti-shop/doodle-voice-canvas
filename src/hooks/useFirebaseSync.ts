@@ -46,7 +46,7 @@ import { loadTasksFromDB, saveTasksToDB } from '@/utils/taskStorage';
 import { getSetting, setSetting, getAllSettings } from '@/utils/settingsStorage';
 import { getAllTags, saveAllTags } from '@/utils/tagStorage';
 import { loadHabits, saveHabit } from '@/utils/habitStorage';
-import { loadJourneyData, saveJourneyData, VirtualJourneyData } from '@/utils/virtualJourneyStorage';
+import { loadJourneyData, saveJourneyData, sanitizeJourneyData, VirtualJourneyData } from '@/utils/virtualJourneyStorage';
 import { Folder, TaskSection } from '@/types/note';
 
 type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error' | 'offline';

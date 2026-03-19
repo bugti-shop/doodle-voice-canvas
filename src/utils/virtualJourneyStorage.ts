@@ -167,10 +167,49 @@ export const ALL_JOURNEYS: Journey[] = [
 
 const STORAGE_KEY = 'flowist_virtual_journey';
 
+/** Firebase RTDB converts arrays to objects with numeric keys – normalise back */
+const toArray = (val: unknown): string[] => {
+  if (Array.isArray(val)) return val;
+  if (val && typeof val === 'object') return Object.values(val as Record<string, string>);
+  return [];
+};
+
+/** Ensure every JourneyProgress entry has valid arrays/fields after Firebase round-trip */
+export const sanitizeJourneyData = (raw: any): VirtualJourneyData => {
+  if (!raw || typeof raw !== 'object') {
+    return { activeJourneyId: null, completedJourneys: [], journeyProgress: {}, totalTasksEver: 0 };
+  }
+  const completedJourneys = toArray(raw.completedJourneys);
+  const journeyProgress: Record<string, JourneyProgress> = {};
+
+  if (raw.journeyProgress && typeof raw.journeyProgress === 'object') {
+    for (const [key, val] of Object.entries(raw.journeyProgress)) {
+      const p = val as any;
+      journeyProgress[key] = {
+        journeyId: p.journeyId ?? key,
+        tasksCompleted: p.tasksCompleted ?? 0,
+        currentMilestoneIndex: p.currentMilestoneIndex ?? 0,
+        currentMilestoneTasks: p.currentMilestoneTasks ?? 0,
+        startedAt: p.startedAt ?? new Date().toISOString(),
+        completedAt: p.completedAt,
+        milestonesReached: toArray(p.milestonesReached),
+        milestonesReachedAt: p.milestonesReachedAt ?? {},
+      };
+    }
+  }
+
+  return {
+    activeJourneyId: raw.activeJourneyId ?? null,
+    completedJourneys,
+    journeyProgress,
+    totalTasksEver: raw.totalTasksEver ?? 0,
+  };
+};
+
 export const loadJourneyData = (): VirtualJourneyData => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) return sanitizeJourneyData(JSON.parse(raw));
   } catch {}
   return {
     activeJourneyId: null,
