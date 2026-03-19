@@ -56,7 +56,7 @@ export const UrgentReminderOverlay = () => {
     try {
       const items = await loadTodoItems();
       const updated = items.map(item =>
-        item.id === reminder.id ? { ...item, completed: true, completedAt: new Date().toISOString() } : item
+        item.id === reminder.id ? { ...item, completed: true, completedAt: new Date() } : item
       );
       await saveTodoItems(updated);
       // Dispatch tasksRestored so Today page reloads its state from storage
