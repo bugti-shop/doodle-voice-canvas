@@ -257,6 +257,9 @@ export const createReminderChannels = async (): Promise<void> => {
  * Initialize the reminder system (call once on app start)
  */
 export const initializeReminders = async (): Promise<void> => {
+  // Always restore urgent in-app timers (works on both web and native)
+  restoreUrgentTimers().catch(console.warn);
+
   if (!Capacitor.isNativePlatform()) return;
 
   await createReminderChannels();
@@ -291,6 +294,8 @@ export const initializeReminders = async (): Promise<void> => {
   App.addListener('appStateChange', ({ isActive }) => {
     if (isActive) {
       checkMissedUrgentReminders();
+      // Also restore any timers that were killed while backgrounded
+      restoreUrgentTimers().catch(console.warn);
     }
   });
 
@@ -298,6 +303,37 @@ export const initializeReminders = async (): Promise<void> => {
   setTimeout(async () => {
     await requestReminderPermission();
   }, 1500);
+};
+
+/**
+ * Restore urgent in-app timers from stored tasks
+ * Called on app start and app resume to ensure timers survive app restarts
+ */
+const restoreUrgentTimers = async (): Promise<void> => {
+  try {
+    const { loadTodoItems } = await import('@/utils/todoItemsStorage');
+    const items = await loadTodoItems();
+    const now = new Date();
+    let restored = 0;
+
+    for (const item of items) {
+      if (item.isUrgent && item.reminderTime && !item.completed) {
+        const reminderDate = new Date(item.reminderTime);
+        if (reminderDate > now) {
+          scheduleUrgentInAppTimer(item.id, item.text, reminderDate);
+          // Also track for resume-check
+          pendingUrgentReminders.set(item.id, { taskText: item.text, reminderTime: reminderDate });
+          restored++;
+        }
+      }
+    }
+
+    if (restored > 0) {
+      console.log(`[Reminder] Restored ${restored} urgent in-app timer(s)`);
+    }
+  } catch (e) {
+    console.warn('[Reminder] Failed to restore urgent timers:', e);
+  }
 };
 
 /**
