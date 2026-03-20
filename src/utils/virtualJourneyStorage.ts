@@ -186,23 +186,23 @@ export const sanitizeJourneyData = (raw: any): VirtualJourneyData => {
     for (const [key, val] of Object.entries(raw.journeyProgress)) {
       const p = val as any;
       journeyProgress[key] = {
-        journeyId: p.journeyId ?? key,
-        tasksCompleted: p.tasksCompleted ?? 0,
-        currentMilestoneIndex: p.currentMilestoneIndex ?? 0,
-        currentMilestoneTasks: p.currentMilestoneTasks ?? 0,
-        startedAt: p.startedAt ?? new Date().toISOString(),
-        completedAt: p.completedAt,
-        milestonesReached: toArray(p.milestonesReached),
-        milestonesReachedAt: p.milestonesReachedAt ?? {},
+        journeyId: typeof p?.journeyId === 'string' ? p.journeyId : key,
+        tasksCompleted: Number.isFinite(Number(p?.tasksCompleted)) ? Math.max(0, Number(p.tasksCompleted)) : 0,
+        currentMilestoneIndex: Number.isFinite(Number(p?.currentMilestoneIndex)) ? Math.max(0, Number(p.currentMilestoneIndex)) : 0,
+        currentMilestoneTasks: Number.isFinite(Number(p?.currentMilestoneTasks)) ? Math.max(0, Number(p.currentMilestoneTasks)) : 0,
+        startedAt: typeof p?.startedAt === 'string' ? p.startedAt : new Date().toISOString(),
+        completedAt: typeof p?.completedAt === 'string' ? p.completedAt : undefined,
+        milestonesReached: toArray(p?.milestonesReached),
+        milestonesReachedAt: p?.milestonesReachedAt && typeof p.milestonesReachedAt === 'object' ? p.milestonesReachedAt : {},
       };
     }
   }
 
   return {
-    activeJourneyId: raw.activeJourneyId ?? null,
+    activeJourneyId: typeof raw.activeJourneyId === 'string' ? raw.activeJourneyId : null,
     completedJourneys,
     journeyProgress,
-    totalTasksEver: raw.totalTasksEver ?? 0,
+    totalTasksEver: Number.isFinite(Number(raw.totalTasksEver)) ? Math.max(0, Number(raw.totalTasksEver)) : 0,
   };
 };
 
@@ -220,7 +220,7 @@ export const loadJourneyData = (): VirtualJourneyData => {
 };
 
 export const saveJourneyData = (data: VirtualJourneyData) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizeJourneyData(data)));
   window.dispatchEvent(new Event('journeyUpdated'));
 };
 
@@ -235,10 +235,18 @@ export const startJourney = (journeyId: string): VirtualJourneyData => {
       currentMilestoneTasks: 0,
       startedAt: new Date().toISOString(),
       milestonesReached: [],
+      milestonesReachedAt: {},
     };
   }
   saveJourneyData(data);
   return data;
+};
+
+const getMilestoneTarget = (journey: Journey, milestoneIndex: number) => {
+  const current = journey.milestones[milestoneIndex];
+  if (!current) return 0;
+  const previous = milestoneIndex > 0 ? journey.milestones[milestoneIndex - 1].tasksRequired : 0;
+  return Math.max(current.tasksRequired - previous, 0);
 };
 
 export const advanceJourney = (): { newMilestone?: JourneyMilestone; journeyCompleted?: boolean } => {
@@ -251,35 +259,34 @@ export const advanceJourney = (): { newMilestone?: JourneyMilestone; journeyComp
   const progress = data.journeyProgress[data.activeJourneyId];
   if (!progress || progress.completedAt) return {};
 
-  // Initialize new fields for old data
-  if (progress.currentMilestoneIndex === undefined) progress.currentMilestoneIndex = 0;
-  if (progress.currentMilestoneTasks === undefined) progress.currentMilestoneTasks = 0;
-
-  progress.tasksCompleted += 1;
+  progress.currentMilestoneIndex = Math.max(0, Math.min(progress.currentMilestoneIndex ?? 0, journey.milestones.length));
+  progress.currentMilestoneTasks = Math.max(0, progress.currentMilestoneTasks ?? 0);
+  progress.tasksCompleted = Math.max(0, progress.tasksCompleted ?? 0) + 1;
   progress.currentMilestoneTasks += 1;
-  data.totalTasksEver += 1;
+  data.totalTasksEver = Math.max(0, data.totalTasksEver ?? 0) + 1;
 
-  // Check if current milestone is completed
   let newMilestone: JourneyMilestone | undefined;
   if (!progress.milestonesReachedAt) progress.milestonesReachedAt = {};
+  if (!Array.isArray(progress.milestonesReached)) progress.milestonesReached = [];
 
   const currentMs = journey.milestones[progress.currentMilestoneIndex];
-  if (currentMs && progress.currentMilestoneTasks >= currentMs.tasksRequired) {
-    // Milestone reached!
+  const currentTarget = getMilestoneTarget(journey, progress.currentMilestoneIndex);
+
+  if (currentMs && currentTarget > 0 && progress.currentMilestoneTasks >= currentTarget) {
     if (!progress.milestonesReached.includes(currentMs.id)) {
       progress.milestonesReached.push(currentMs.id);
       progress.milestonesReachedAt[currentMs.id] = new Date().toISOString();
       newMilestone = currentMs;
     }
-    // Move to next milestone and reset counter
     progress.currentMilestoneIndex += 1;
     progress.currentMilestoneTasks = 0;
   }
 
-  // Check journey completion (all milestones done)
   let journeyCompleted = false;
-  if (progress.currentMilestoneIndex >= journey.milestones.length) {
-    progress.completedAt = new Date().toISOString();
+  if (progress.currentMilestoneIndex >= journey.milestones.length || progress.tasksCompleted >= journey.totalTasks) {
+    progress.completedAt = progress.completedAt || new Date().toISOString();
+    progress.currentMilestoneIndex = journey.milestones.length;
+    progress.currentMilestoneTasks = 0;
     if (!data.completedJourneys.includes(journey.id)) {
       data.completedJourneys.push(journey.id);
     }

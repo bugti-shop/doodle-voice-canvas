@@ -19,7 +19,7 @@ export const useJourneyAdvancement = () => {
     const walk = (list: TodoItem[]): number =>
       list.reduce((sum, item) => {
         const self = item.completed ? 1 : 0;
-        const nested = item.subtasks?.length ? walk(item.subtasks) : 0;
+        const nested = Array.isArray(item.subtasks) && item.subtasks.length > 0 ? walk(item.subtasks) : 0;
         return sum + self + nested;
       }, 0);
 
@@ -35,7 +35,6 @@ export const useJourneyAdvancement = () => {
         const items = await loadTodoItems();
         const completedCount = countCompletedTasks(items);
 
-        // First sync: establish baseline without awarding progress
         if (lastCompletedCountRef.current === null) {
           lastCompletedCountRef.current = completedCount;
           return;
@@ -47,53 +46,58 @@ export const useJourneyAdvancement = () => {
         if (delta <= 0) return;
 
         for (let i = 0; i < delta; i++) {
-          const active = getActiveJourney();
-          if (!active || active.progress.completedAt) break;
+          try {
+            const active = getActiveJourney();
+            if (!active || active.progress.completedAt) break;
 
-          const result = advanceJourney();
-          if (!result.newMilestone && !result.journeyCompleted) continue;
+            const result = advanceJourney();
+            if (!result.newMilestone && !result.journeyCompleted) continue;
 
-          playAchievementSound();
-          const journey = active.journey;
+            playAchievementSound();
+            const journey = active.journey;
 
-          if (result.journeyCompleted) {
-            const rarity = getRarityFromJourney(journey, 'journey_complete');
-            toast({
-              description: BadgeUnlockToast({
-                icon: '🏆',
-                label: `${journey.name} Conqueror`,
-                journeyName: journey.name,
-                rarity,
-                isJourneyComplete: true,
-              }),
-              duration: 5000,
-            });
-          } else if (result.newMilestone) {
-            const msIndex = journey.milestones.findIndex((m) => m.id === result.newMilestone!.id);
-            const rarity = getRarityFromJourney(journey, 'milestone', msIndex);
-            toast({
-              description: BadgeUnlockToast({
-                icon: result.newMilestone.icon,
-                label: result.newMilestone.name,
-                journeyName: journey.name,
-                rarity,
-              }),
-              duration: 4000,
-            });
+            if (result.journeyCompleted) {
+              const rarity = getRarityFromJourney(journey, 'journey_complete');
+              toast({
+                description: BadgeUnlockToast({
+                  icon: '🏆',
+                  label: `${journey.name} Conqueror`,
+                  journeyName: journey.name,
+                  rarity,
+                  isJourneyComplete: true,
+                }),
+                duration: 5000,
+              });
+            } else if (result.newMilestone) {
+              const msIndex = journey.milestones.findIndex((m) => m.id === result.newMilestone.id);
+              const rarity = getRarityFromJourney(journey, 'milestone', Math.max(msIndex, 0));
+              toast({
+                description: BadgeUnlockToast({
+                  icon: result.newMilestone.icon,
+                  label: result.newMilestone.name,
+                  journeyName: journey.name,
+                  rarity,
+                }),
+                duration: 4000,
+              });
+            }
+
+            window.dispatchEvent(
+              new CustomEvent('journeyMilestoneReached', {
+                detail: { milestone: result.newMilestone, completed: result.journeyCompleted },
+              })
+            );
+          } catch (error) {
+            console.warn('Journey advancement step failed:', error);
           }
-
-          window.dispatchEvent(
-            new CustomEvent('journeyMilestoneReached', {
-              detail: { milestone: result.newMilestone, completed: result.journeyCompleted },
-            })
-          );
         }
+      } catch (error) {
+        console.warn('Journey advancement sync failed:', error);
       } finally {
         isProcessingRef.current = false;
       }
     };
 
-    // Initialize baseline once
     void syncAndAdvance();
 
     const handler = () => {

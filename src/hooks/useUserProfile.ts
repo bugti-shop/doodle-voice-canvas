@@ -11,13 +11,28 @@ const PROFILE_KEY = 'flowist_user_profile';
 
 const DEFAULT_PROFILE: UserProfile = { name: '', avatarUrl: '', coverUrl: '' };
 
+const sanitizeUserProfile = (value: unknown): UserProfile => {
+  if (!value || typeof value !== 'object') {
+    return DEFAULT_PROFILE;
+  }
+
+  const raw = value as Partial<UserProfile>;
+  return {
+    name: typeof raw.name === 'string' ? raw.name : '',
+    avatarUrl: typeof raw.avatarUrl === 'string' ? raw.avatarUrl : '',
+    coverUrl: typeof raw.coverUrl === 'string' ? raw.coverUrl : '',
+  };
+};
+
 export const loadUserProfile = async (): Promise<UserProfile> => {
-  return getSetting<UserProfile>(PROFILE_KEY, DEFAULT_PROFILE);
+  const stored = await getSetting<UserProfile | null>(PROFILE_KEY, DEFAULT_PROFILE);
+  return sanitizeUserProfile(stored);
 };
 
 export const saveUserProfile = async (profile: UserProfile): Promise<void> => {
-  await setSetting(PROFILE_KEY, profile);
-  window.dispatchEvent(new CustomEvent('userProfileUpdated', { detail: profile }));
+  const sanitized = sanitizeUserProfile(profile);
+  await setSetting(PROFILE_KEY, sanitized);
+  window.dispatchEvent(new CustomEvent('userProfileUpdated', { detail: sanitized }));
 };
 
 export const useUserProfile = () => {
@@ -25,15 +40,23 @@ export const useUserProfile = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadUserProfile().then(p => { setProfile(p); setIsLoading(false); });
+    loadUserProfile()
+      .then((p) => {
+        setProfile(sanitizeUserProfile(p));
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setProfile(DEFAULT_PROFILE);
+        setIsLoading(false);
+      });
 
-    const handler = (e: CustomEvent<UserProfile>) => setProfile(e.detail);
+    const handler = (e: CustomEvent<UserProfile>) => setProfile(sanitizeUserProfile(e.detail));
     window.addEventListener('userProfileUpdated', handler as EventListener);
     return () => window.removeEventListener('userProfileUpdated', handler as EventListener);
   }, []);
 
   const updateProfile = useCallback(async (updates: Partial<UserProfile>) => {
-    const updated = { ...profile, ...updates };
+    const updated = sanitizeUserProfile({ ...profile, ...updates });
     setProfile(updated);
     await saveUserProfile(updated);
   }, [profile]);
